@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../models/question_model.dart';
@@ -47,6 +51,41 @@ class CreateQuizController extends GetxController {
   Future<void> updateQuiz(List<Question> questions) async {
     if (quiz != null) {
       quiz?.questions = questions;
+
+      String? getCurrentUserUid() {
+        return FirebaseAuth.instance.currentUser?.uid;
+      }
+
+      String? getCurrentUserDisplayName() {
+        return FirebaseAuth.instance.currentUser?.displayName;
+      }
+
+      var user_uid = getCurrentUserUid();
+      var user_DisplayName = getCurrentUserDisplayName();
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      print(quiz?.uniqueId);
+      final DocumentReference quizDocRef = _firestore
+          .collection('users')
+          .doc(user_uid)
+          .collection('quizzes')
+          .doc(quiz?.uniqueId);
+
+      // Convert quiz to a Firestore-compatible format
+      Map<String, dynamic> quizData = {
+        "title": quiz?.title,
+        "author": user_DisplayName,
+        "questions": quiz?.questions
+            .map((q) => {
+                  "question": q.text,
+                  "options": q.options,
+                  "correctOption": q.correctOptionIndex + 1
+                })
+            .toList(),
+        "created_at": FieldValue.serverTimestamp(),
+      };
+
+      // Store the quiz in Firestore
+      await quizDocRef.set(quizData);
       await HiveService.addQuiz(quiz!);
     }
   }

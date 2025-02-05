@@ -1,42 +1,8 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:get/get.dart';
-//
-// class LoginController extends GetxController {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
-//   var user = (null as User?).obs;
-//   @override
-//   void onInit() {
-//     // TODO: implement onInit
-//     super.onInit();
-//     _auth.authStateChanges().listen((event) {
-//       user.value = event;
-//       print("user value ${user.value}");
-//     });
-//   }
-//
-//   Future<void> handleGoogleSignIn() async{
-//     try {
-//       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-//       _auth.signInWithProvider(googleAuthProvider);
-//     } catch (error) {
-//       print("++++++++=");
-//       print(error);
-//     }
-//   }
-//   Future<void> handleLogout() async{
-//     try {
-//       await _auth.signOut(); // Sign out the current user
-//       print("User logged out successfully");
-//     } catch (error) {
-//       print("Error during logout: $error");
-//     }
-//   }
-// }
-
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,9 +12,10 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _authListener = _auth.authStateChanges().listen((event) {
+    _authListener = _auth.authStateChanges().listen((User? event) {
       user.value = event;
-      print("User value: ${user.value}");
+      print("User value: -----------------${user.value?.providerData[0].displayName}\n\n");
+      print("User uid value: -----------------${user.value}\n\n");
 
       if (user.value != null) {
         print("logged in ");
@@ -56,7 +23,6 @@ class LoginController extends GetxController {
           Get.offAllNamed('/'); // Ensure navigation happens asynchronously
         });
       }
-
     });
   }
 
@@ -74,9 +40,41 @@ class LoginController extends GetxController {
         idToken: googleAuth.idToken,
       );
 
-      await _auth.signInWithCredential(credential);
+      // await _auth.signInWithCredential(credential);
+      //
+      //
+      //
+      //
+
+
+
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      final DocumentReference userDocRef =
+          _firestore.collection('users').doc(user?.uid);
+      final DocumentSnapshot userDoc = await userDocRef.get();
+      if (!userDoc.exists) {
+        // Create the user document
+        await userDocRef.set({
+          'uid': user?.uid,
+          'displayName': user?.displayName,
+          'email': user?.email,
+          'photoUrl': user?.photoURL,
+          'createdAt': FieldValue.serverTimestamp(),
+          // Add any additional fields as needed
+        });
+        print("-------------------------------New user added to Firestore");
+      } else {
+        // Optionally update user details if needed
+        await userDocRef.update({
+          'lastSignIn': FieldValue.serverTimestamp(),
+        });
+        print("-------------------------------Existing user signed in and updated in Firestore");
+      }
     } catch (error) {
-      print("Error during Google Sign-In: ${error.toString()}");
+      print("-------------------------------Error during Google Sign-In: ${error.toString()}");
     }
   }
 
@@ -86,8 +84,6 @@ class LoginController extends GetxController {
       await GoogleSignIn().signOut(); // Also sign out from Google
       print("User logged out successfully");
       Get.offAllNamed('/login'); // Ensure navigation happens asynchronously
-
-
     } catch (error) {
       print("Error during logout: $error");
     }
