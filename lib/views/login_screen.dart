@@ -31,16 +31,14 @@ class LoginScreen extends StatelessWidget {
           ),
           child: Obx(() {
             final loginController = Get.find<LoginController>();
+
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: loginController.user.value == null
                     ? ElevatedButton(
-                        onPressed: () async{
-                         await loginController.handleGoogleSignIn();
-                              if(loginController.user.value!=null){
-                                Get.offAllNamed('/');
-                              }
+                        onPressed: () async {
+                          await loginController.handleGoogleSignIn();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

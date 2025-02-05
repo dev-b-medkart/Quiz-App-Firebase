@@ -48,12 +48,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCqNYfsjUzgPcvmy8oJvT7DM8tjx6pc3zc',
-    appId: '1:127827910797:web:be59e14f514937283fc2c4',
+    appId: '1:127827910797:web:002509b0b9da8c9f3fc2c4',
     messagingSenderId: '127827910797',
     projectId: 'quiz-app-75be4',
     authDomain: 'quiz-app-75be4.firebaseapp.com',
     storageBucket: 'quiz-app-75be4.firebasestorage.app',
-    measurementId: 'G-QG0P9VCJFF',
+    measurementId: 'G-ZJN98T3KBH',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
