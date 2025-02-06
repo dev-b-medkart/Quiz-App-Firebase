@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app_firebase/controllers/home_page_controller.dart';
 import '../controllers/create_quiz_controller.dart';
 import '../models/question_model.dart';
 import '../models/quiz_model.dart';
@@ -19,6 +20,7 @@ class _QuestionFormPageState extends State<QuestionFormPage> {
   late PageController _pageController;
   late List<Question> _questions;
   final controller=Get.find<CreateQuizController>();
+  final homeController=Get.find<HomeController>();
 
   Quiz? quizData;
   int numOfQuestion = 0;
@@ -61,11 +63,14 @@ class _QuestionFormPageState extends State<QuestionFormPage> {
     return true;
   }
 
-  void _submitQuiz() {
+  void _submitQuiz() async{
     if (_isQuizComplete()) {
-      controller.updateQuiz(_questions);
+      await controller.updateQuiz(_questions);
       quizData?.questions = _questions;
-      Get.offAllNamed('/');
+      homeController.loadQuizzes();
+      Get.until((route) => route.settings.name == "/",);
+
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

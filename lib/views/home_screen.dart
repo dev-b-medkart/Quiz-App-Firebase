@@ -8,7 +8,8 @@ import 'play_quiz_screen.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-  final homeController = Get.put(HomeController());
+  // final homeController = Get.put(HomeController());
+  final homeController = Get.find<HomeController>();
   final loginController = Get.find<LoginController>();
 
   @override
@@ -31,7 +32,7 @@ class HomePage extends StatelessWidget {
           // Create Quiz Button
           IconButton(
             onPressed: () {
-              Get.to(() => CreateQuizPage());
+              Get.toNamed('/createQuiz');
             },
             icon: const Icon(Icons.add, color: Colors.green),
             tooltip: "Create a new quiz",
@@ -59,8 +60,10 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: GestureDetector(
                 onTap: () {
+
+                  // print("quiz =========$quiz");
                   homeController.playQuiz(quiz);
-                  Get.to(() => PlayQuizPage());
+                  Get.toNamed('/playQuiz');
                 },
                 child: Card(
                   shape: RoundedRectangleBorder(
@@ -116,7 +119,7 @@ class HomePage extends StatelessWidget {
                               child: InkWell(
                                 onTap: () {
                                   homeController.playQuiz(quiz);
-                                  Get.to(() => PlayQuizPage());
+                                  Get.toNamed('/playQuiz');
                                 },
                                 borderRadius: BorderRadius.circular(50),
                                 splashColor: Colors.greenAccent.withOpacity(0.2),

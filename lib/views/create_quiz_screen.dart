@@ -107,7 +107,7 @@ class CreateQuizPage extends StatelessWidget {
                       controller.submitFun(
                         quizCreated: (value) async {
 
-                               Get.to(() => QuestionFormPage());
+                              Get.toNamed('/QuestionFormPage');
 
 
                         },

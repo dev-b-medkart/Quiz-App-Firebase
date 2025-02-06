@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print("login controller");
     _authListener = _auth.authStateChanges().listen((User? event) {
       user.value = event;
       print("User value: -----------------${user.value?.providerData[0].displayName}\n\n");

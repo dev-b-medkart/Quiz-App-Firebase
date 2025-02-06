@@ -19,17 +19,20 @@ class QuizAdapter extends TypeAdapter<Quiz> {
     return Quiz(
       title: fields[0] as String,
       questions: (fields[1] as List).cast<Question>(),
+      uniqueId: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Quiz obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
-      ..write(obj.questions);
+      ..write(obj.questions)
+      ..writeByte(2)
+      ..write(obj.uniqueId);
   }
 
   @override

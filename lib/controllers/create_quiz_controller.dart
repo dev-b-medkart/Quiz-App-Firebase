@@ -33,7 +33,7 @@ class CreateQuizController extends GetxController {
     final numQuestions = int.tryParse(numQuestionsController.text)!;
     final quizTime = int.tryParse(timeController.text)!;
     final quizTitle = titleController.text;
-    quiz = Quiz(title: quizTitle, questions: []);
+    quiz = Quiz(title: quizTitle, questions: [], uniqueId: "");
 
     quizCreated.call("Quiz Created");
     // final updatedQuiz =
@@ -63,12 +63,12 @@ class CreateQuizController extends GetxController {
       var user_uid = getCurrentUserUid();
       var user_DisplayName = getCurrentUserDisplayName();
       final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      print(quiz?.uniqueId);
+      print(quiz?.getUniqueId);
       final DocumentReference quizDocRef = _firestore
           .collection('users')
           .doc(user_uid)
           .collection('quizzes')
-          .doc(quiz?.uniqueId);
+          .doc(quiz?.getUniqueId());
 
       // Convert quiz to a Firestore-compatible format
       Map<String, dynamic> quizData = {

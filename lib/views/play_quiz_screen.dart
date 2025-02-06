@@ -20,15 +20,17 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
   @override
   void initState() {
     super.initState(); // Call parent initState()
-    final homeController = Get.find<HomeController>();
+    // final homeController = Get.find<HomeController>();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    final homeController = Get.find<HomeController>();
 
+    final homeController = Get.find<HomeController>();
     final playQuizController = Get.put(PlayQuizController());
+    print("homeController.quiz ${homeController.currentQuizIndex}");
+
     playQuizController.createQuiz(homeController.quiz);
     final quizList = (homeController.quiz?.questions ?? []);
     return Scaffold(
@@ -68,7 +70,9 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                 if (homeController.quiz != null) {
 
                   homeController.submitQuiz(playQuizController.userAnswers);
-                  Get.offAll(QuizResult());
+                  // Get.offAll(QuizResult());
+                  Get.offAll(()=>QuizResult());
+
                   // Get.offAll(QuizResult(
                   //     quiz: homeController.quiz!,
                   //     userAnswers: playQuizController.userAnswers));

@@ -147,7 +147,7 @@ class _QuizResultState extends State<QuizResult> {
               child: ElevatedButton(
                 onPressed: () {
                   homeController.resetScore();
-                  Get.offAll(HomePage());
+                  Get.offAllNamed('/');
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),

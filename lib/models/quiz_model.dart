@@ -3,6 +3,7 @@ import 'question_model.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 part 'quiz_model.g.dart';
+
 @HiveType(typeId: 1)
 class Quiz {
   @HiveField(0)
@@ -10,12 +11,17 @@ class Quiz {
 
   @HiveField(1)
   List<Question> questions;
+  @HiveField(2)
+  String uniqueId;
 
   Quiz({
     required this.title,
     required this.questions,
+    required this.uniqueId
+
   });
-  String get uniqueId {
+
+  String  getUniqueId() {
     // Convert hashCode to a string
     String rawId = hashCode.toString();
 
@@ -25,6 +31,7 @@ class Quiz {
 
     return digest.toString(); // Return hashed ID
   }
+
   @override
   String toString() {
     // TODO: implement toString
